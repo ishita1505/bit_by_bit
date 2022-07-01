@@ -1,0 +1,75 @@
+{% extends 'vcBase/main.html' %}
+{% load static %}
+{% block content %}
+
+<main>
+
+    <section id="form-container">
+
+        <img id="logo" src="{% static 'images/chat icon.png' %}"/>
+
+        <div id="welcome-message">
+            <h1>Welcome to MyChat</h1>
+            <p>A group video calling platform made just for you!</p>
+        </div>
+
+        <form id="form">
+            <div class="form-field">
+                <label>Room:</label>
+                <input name="room" placeholder="Enter a room name..."  style="text-transform:uppercase"/>
+            </div>
+
+            {% comment %} <div class="form-field">
+                <label>Name:</label>
+                <input name="name" placeholder="Enter your name..."  style="text-transform:uppercase"/>
+            </div> {% endcomment %}
+
+                <div class="form-field">
+                    <input type="submit" value="Join Stream" />
+                </div>
+        </form>
+    </section>
+</main>
+
+<script type = "text/javascript">
+    let form = document.getElementById('form')
+
+    //adding an event handler, an async function
+    let handleSubmit = async (e) =>
+    {
+        //prevent form's defualt actions and redirect user to next page
+        e.preventDefault()
+
+        //set a session
+        //we use room after target since input name is room in first form field
+        let room = e.target.room.value.toUpperCase()
+
+        // set response to fetch token
+        let response = await fetch(`get_token/?channel=${room}`)
+        //await response 
+        let data = await response.json() //from views.py
+
+        //from response, we need uid 
+        // from views.py we can see that we get both uid and token
+        // so we set them both in session
+
+        let UID = data.uid
+        let token = data.token
+
+        //set our session storage
+        sessionStorage.setItem('UID',UID)
+        sessionStorage.setItem('token',token)
+        sessionStorage.setItem('room',room)
+
+        //to check session storage, go to applications in inspect, for every time you join, token is generated
+
+
+
+        window.open('/room/','_self') //not opening a new tab, just changing the current URL
+    }
+
+    //whenever the submit is triggered, go to handleSubmit
+    form.addEventListener('submit', handleSubmit)
+</script>
+
+{% endblock content %}
