@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{%  block start %}
+{% load static %}
+{% load crispy_forms_tags %}
+<head>
+    <style>
+    .numeric-slider .ui-draggable, .numeric-slider .ui-droppable {
+    background-position: top;
+  }
+  
+  .numeric-slider .ui-widget-header {
+    background: #006fba;
+  }
+  
+  .numeric-slider .value {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    margin: 0 0 0 -20px;
+    width: 40px;
+    text-align: center;
+    display: block;
+    font-weight: normal;
+  }
+  
+  .numeric-slider {
+    text-align: center;
+  }
+  
+  .numeric-slider-range-text {
+    text-align: center;
+  }</style>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>$( function() {
+    $(".numeric-slider-range").slider({
+      range: true,
+      min: 0,
+      max: 100,
+      slide: function( event, ui ) {
+        $("#" + $(this).parent().attr("id") + "_min").val(ui.values[ 0 ]);
+        $("#" + $(this).parent().attr("id") + "_max").val(ui.values[ 1 ]);
+        $("#" + $(this).parent().attr("id") + "_text").text(ui.values[ 0 ] + ' - ' + ui.values[ 1 ]);
+      },
+      create: function( event, ui ) {
+        $(this).slider("option",'min',$(this).parent().data("range_min"));
+        $(this).slider("option",'max',$(this).parent().data("range_max"));
+        $(this).slider("option",'values',[$(this).parent().data("cur_min"), $(this).parent().data("cur_max")]);
+      }
+    });
+    $("#" + $(".numeric-slider").attr("id") + "_min").val( $(".numeric-slider").data("cur_min") );
+    $("#" + $(".numeric-slider").attr("id") + "_max").val( $(".numeric-slider").data("cur_max") );
+    $("#" + $(".numeric-slider").attr("id") + "_text").text(ui.values[ 0 ] + ' - ' + ui.values[ 1 ]);
+  } );</script>
+</head>
+<!-- jumbotron and nav -->
+<section class="colorful jumbotron mb-0" role="banner">
+    <nav class="navbar navbar-expand-lg justify-content-between navbar-dark" role="navigation">
+        <div class="navbar-brand">
+            <a href="index.html">Hotel Spoof
+                <em>.</em>
+            </a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+       
+    </nav>
+
+    <div class="container hotels-container">
+
+        <div class="row mt-2 justify-content-between">
+            <div class="col-md-8 text-white align-self-center mb-2 p-4">
+                <h1>STAYINN</h1>
+                <span class="">AAP BHI AAYIEN SAATH MEI POORE PARIVAR KO BHI LAIYE
+                </span>
+            </div>
+           
+        </div>
+    </div>
+</section>
+
+<section class="search-container mb-5 pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="row my-3">
+                    
+                   
+
+                    
+                </div>
+
+                {% crispy hotel_filter.form %}
+<div class="price filter">
+                <table border='1' style="width:100%; text-align:center">
+                  <thead>
+                    <tr>
+                      <th> Name </th>
+                      <th> price </th>
+                    </tr>
+                  </thead>
+              
+                  <tbody>
+                    {% for hotels_obj in hotels_objs %}
+                    <tr>
+                      <td> {{ hotels_obj.hotel_name}} </td>
+                      <td> {{ hotels_obj.hotel_price}} </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              
+            </div>
+            
+
+
+               <!--new hai yeh-->
+                <div id="my-numeric-slider"
+                class="form-group numeric-slider"
+                data-range_min="[Min. Possible Value]"
+                data-range_max="[Max. Possible Value]"
+                data-cur_min="[Current Min. Value]"
+                data-cur_max="[Current Max. Value]">
+           <div class="numeric-slider-range ui-slider ui-slider-horizontal ui-slider-range"></div>
+           <span class="numeric-slider-range_text" id='my-numeric-slider_text'>[Lower Value] - [Upper Value]</span>
+           <input type='hidden' id='my-numeric-slider_min' name='slider-min'/>
+           <input type='hidden' id='my-numeric-slider_max' name='slider-max'/>
+           </div>
+                <div class="row mt-2 justify-content-between">
+                    <div class="filter-card">
+                        <h5>Filter</h5>
+                        <form action="#">
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <label for="mintopay">Check in</label>
+                                    <p>
+                                        <input type="date" name="checkin" id="checkin" class="form-control">
+                                    </p>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="maxtopay">Check out</label>
+                                    <p>
+                                        <input type="date" name="checkout" id="checkout" class="form-control">
+                                    </p>
+                                </div>
+                            </div>
+                           
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" class="btn btn-primary btn-block" value="Limit">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+           
+            
+
+            <div class="col-lg-9  px-4 mb-5">
+                <form>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                    <div class="form-inline">
+                        <label class="" for="exampleFormControlSelect1">Sort by</label>
+                        <select class="form-control" name="sort_by" id="exampleFormControlSelect1">
+                            <option value="">Recommended</option>
+                            <option {% if sort_by == 'ASC' %} selected {%endif %} value="ASC">ASC</option>
+                            <option {% if sort_by == 'DSC' %} selected {%endif %} value="DSC">DSC</option>
+                           
+                        </select>
+                    </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-inline">
+                            <label class="" for="exampleFormControlSelect1">Search</label>
+                            <input name="search" class="form-control" value="{{search}}" placeholder="Search"> 
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-inline">
+                           <label class="" for="exampleFormControlSelect1">Amenities</label>
+                            <select name="amenities" class="form-control" multiple>
+                            <option value="">Choose</option>
+                            {% for amenities_obj in amenities_objs %}
+                            <option {% if amenities_obj.amenity_name in amenities  %} selected {%endif%}value="{{amenities_obj.amenity_name}}">{{amenities_obj.amenity_name}}</option>
+                                {% endfor %}
+                        </select>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                     
+                            <button style="margin-top: 30px;" type="submit" class="btn btn-success">Find</button>
+                        </div>
+                </div>
+                </form>
+                
+                {% for hotels_obj in hotels_objs %}
+                <div class="row search-card-result">
+                
+
+                    
+                    <div class="col-md-3">
+                       
+                    <a href="/hotel-detail/{{hotels_obj.uid}}">
+                        <img class="img-fluid" src="/media/{{hotels_obj.images.first.images}}" alt="Card image cap">
+                    
+                    </a></div>
+               
+                    <div class="col-md-5">
+                        <h5>{{hotels_obj.hotel_name}}</h5>
+                        
+                        <p>
+                            {{hotels_obj.description|truncatechars:150}}
+                        </p>
+                        <p>
+                            {%for amenitie in hotels_obj.amenities.all %}
+                            <b>{{amenitie.amenity_name}}</b>,
+                            {% endfor %}
+                        </p>
+                        
+                    </div>
+                    <div class="col-md-2 border-left text-center more-offers">
+                        
+                        <p>{{hotels_obj.hotel_place}}</p>
+                        <p>${{hotels_obj.hotel_price}}</p>
+                        <p>Room count</p>
+                        <p>{{hotels_obj.room_count}}</p>
+                    </div>
+                    <div class="col-md-2 border-left text-center more-offers">
+                       
+                        <div class="btn btn-success">
+                        <a href="/hotel-detail/{{hotels_obj.uid}}" >
+                      View deal 
+                       </a>
+                          </div>
+                    </div>
+                </div>
+                {% endfor %}
+               
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
